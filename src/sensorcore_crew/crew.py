@@ -1,7 +1,7 @@
 import os
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-from crewai.mcp import MCPServerSSE
+from crewai.mcp import MCPServerHTTP
 
 
 @CrewBase
@@ -23,7 +23,7 @@ class SensorCoreCrew:
             "SENSORCORE_MCP_URL", "https://api.sensorcore.dev/api/mcp/sse"
         )
         return [
-            MCPServerSSE(
+            MCPServerHTTP(
                 url=base_url,
                 headers={"x-api-key": api_key},
             )
