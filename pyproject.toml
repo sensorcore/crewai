@@ -9,7 +9,7 @@ license = { text = "MIT" }
 keywords = ["crewai", "analytics", "mcp", "sensorcore", "ai-agents", "product-analytics"]
 
 dependencies = [
-    "crewai[tools]>=0.102.0,<1.0.0",
+    "crewai[tools]>=1.0.0",
 ]
 
 [project.urls]
