@@ -1,6 +1,7 @@
 import os
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
+from crewai.mcp import MCPServerSSE
 
 
 @CrewBase
@@ -15,18 +16,18 @@ class SensorCoreCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
-    def _mcp_config(self):
-        """Build MCP server configuration for SensorCore."""
+    def _mcp_servers(self):
+        """Build MCP server list for SensorCore."""
         api_key = os.environ.get("SENSORCORE_API_KEY", "")
         base_url = os.environ.get(
             "SENSORCORE_MCP_URL", "https://api.sensorcore.dev/api/mcp/sse"
         )
-        return {
-            "sensorcore": {
-                "url": base_url,
-                "headers": {"x-api-key": api_key},
-            }
-        }
+        return [
+            MCPServerSSE(
+                url=base_url,
+                headers={"x-api-key": api_key},
+            )
+        ]
 
     # ── Agents ──────────────────────────────────────────────
 
@@ -35,7 +36,7 @@ class SensorCoreCrew:
         return Agent(
             config=self.agents_config["health_monitor"],  # type: ignore[index]
             verbose=True,
-            mcps=self._mcp_config(),
+            mcps=self._mcp_servers(),
         )
 
     @agent
@@ -43,7 +44,7 @@ class SensorCoreCrew:
         return Agent(
             config=self.agents_config["growth_analyst"],  # type: ignore[index]
             verbose=True,
-            mcps=self._mcp_config(),
+            mcps=self._mcp_servers(),
         )
 
     @agent
@@ -51,7 +52,7 @@ class SensorCoreCrew:
         return Agent(
             config=self.agents_config["bug_detective"],  # type: ignore[index]
             verbose=True,
-            mcps=self._mcp_config(),
+            mcps=self._mcp_servers(),
         )
 
     # ── Tasks ───────────────────────────────────────────────
@@ -82,3 +83,4 @@ class SensorCoreCrew:
             process=Process.sequential,
             verbose=True,
         )
+
