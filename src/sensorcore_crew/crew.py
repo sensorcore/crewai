@@ -4,6 +4,18 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.mcp import MCPServerHTTP
 
 
+# run_behavioral_analysis has nested object params (cohort_a, cohort_b)
+# that require additionalProperties:false for OpenAI strict mode.
+# CrewAI <1.10 strips this field, causing OpenAI 400 errors.
+# Exclude it until CrewAI 1.10+ is stable on AMP.
+EXCLUDED_TOOLS = {"run_behavioral_analysis"}
+
+
+def _sensorcore_tool_filter(tool) -> bool:
+    """Allow all SensorCore MCP tools except those with incompatible schemas."""
+    return tool.name not in EXCLUDED_TOOLS
+
+
 @CrewBase
 class SensorCoreCrew:
     """SensorCore Analytics Crew — AI-powered product analytics.
@@ -26,6 +38,7 @@ class SensorCoreCrew:
             MCPServerHTTP(
                 url=base_url,
                 headers={"x-api-key": api_key},
+                tool_filter=_sensorcore_tool_filter,
             )
         ]
 
