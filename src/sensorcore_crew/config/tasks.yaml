@@ -1,0 +1,96 @@
+health_check:
+  description: >
+    Perform a comprehensive health check of the product.
+
+    Steps:
+    1. Call get_project_stats to understand the data scale.
+    2. Call get_event_names to discover what events exist.
+    3. Call get_smart_alerts to run ALL ML analyzers and get prioritized alerts.
+    4. If there are critical or warning alerts, drill deeper:
+       - For error alerts: call get_error_clusters for details.
+       - For anomaly alerts: call get_anomalies for affected users.
+       - For trend changes: call get_change_points to find when metrics shifted.
+    5. Call get_forecast on the most important event to predict the next 7 days.
+
+    Focus on actionable findings. Skip "everything is fine" fluff.
+  expected_output: >
+    A structured health report with:
+    - Overall status: HEALTHY / WARNING / CRITICAL
+    - Top 3-5 findings with severity, affected users, and evidence
+    - 7-day forecast for the primary metric
+    - Recommended actions (prioritized by urgency)
+  agent: health_monitor
+
+conversion_analysis:
+  description: >
+    Analyze user conversion and engagement to find growth opportunities.
+
+    Steps:
+    1. Call get_metadata_keys to discover available segmentation dimensions.
+    2. Call get_user_flow to map how users navigate the product.
+       Focus on bottlenecks — events with high exit rates.
+    3. Call get_association_rules to discover what behaviors predict conversion.
+    4. Call get_cohort_analysis with metric="retention" to track user quality over time.
+    5. If there are multiple segments (countries, versions, platforms):
+       call get_segment_comparison on the most interesting pair.
+
+    Prioritize findings by potential revenue impact.
+  expected_output: >
+    A growth opportunities report with:
+    - User flow summary with top 3 bottlenecks (events where users leave)
+    - Conversion predictors ("Users who do X are 3x more likely to convert")
+    - Retention trends by cohort
+    - Segment comparison insights (if applicable)
+    - Top 3 prioritized recommendations with expected impact
+  agent: growth_analyst
+
+bug_investigation:
+  description: >
+    Investigate error patterns and find root causes for the most impactful bugs.
+
+    Steps:
+    1. Use findings from the health check to identify the top errors to investigate.
+    2. Call get_bug_detective to find multi-factor conditions for each error.
+       Example output: "This error occurs 90% of the time on iOS 17.4 + app_version=2.1"
+    3. For the most critical bug, call get_dropoff_users to find affected users,
+       then call get_user_journey on 2-3 of those users to see full event sequences.
+    4. Call get_statistical_test to confirm the error is statistically significant
+       (not just random noise).
+
+    Be precise — developers need exact reproduction conditions.
+  expected_output: >
+    A bug investigation report with:
+    - Top 3 bugs ranked by severity and affected user count
+    - For each bug: exact conditions (device, OS, version, country, etc.)
+    - User journey replay showing events before the error
+    - Statistical confirmation (p-value, significance)
+    - Suggested fix or investigation direction
+  agent: bug_detective
+
+executive_summary:
+  description: >
+    Compile all findings from the Health Check, Conversion Analysis, and Bug
+    Investigation into a single executive summary.
+
+    Structure:
+    1. One-paragraph TL;DR — the most important thing to know right now.
+    2. Health Status — overall product health with key metrics.
+    3. Growth Opportunities — top 3 actions to increase conversion/revenue.
+    4. Critical Bugs — top issues that need fixing ASAP.
+    5. Recommended Action Plan — prioritized list of next steps.
+
+    Write for a busy product manager who has 2 minutes to read this.
+    Use data, not opinions. Every claim must reference a specific metric.
+  expected_output: >
+    A concise executive summary in markdown format containing:
+    - TL;DR (2-3 sentences)
+    - Health dashboard (status, key metrics, trend direction)
+    - Top 3 growth opportunities with expected impact
+    - Critical bugs with severity and affected users
+    - Prioritized action plan (numbered list, most urgent first)
+  agent: health_monitor
+  output_file: report.md
+  context:
+    - health_check
+    - conversion_analysis
+    - bug_investigation

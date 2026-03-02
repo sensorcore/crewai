@@ -1,0 +1,25 @@
+[project]
+name = "sensorcore-crew"
+version = "1.0.0"
+description = "CrewAI crew template for AI-powered product analytics with SensorCore. Health monitoring, growth analysis, and bug investigation — powered by 21 ML tools via MCP."
+authors = [{ name = "SensorCore", email = "hello@sensorcore.dev" }]
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = { text = "MIT" }
+keywords = ["crewai", "analytics", "mcp", "sensorcore", "ai-agents", "product-analytics"]
+
+dependencies = [
+    "crewai[tools]>=0.102.0,<1.0.0",
+]
+
+[project.urls]
+Homepage = "https://sensorcore.dev"
+Repository = "https://github.com/sensorcore/crewai"
+Documentation = "https://github.com/sensorcore/skills"
+
+[build-system]
+requires = ["setuptools>=75.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
