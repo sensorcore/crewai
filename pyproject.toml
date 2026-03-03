@@ -10,6 +10,7 @@ keywords = ["crewai", "analytics", "mcp", "sensorcore", "ai-agents", "product-an
 
 dependencies = [
     "crewai[tools]>=1.0.0,<1.10.0",
+    "mcp<1.19.0",
 ]
 
 [project.urls]
